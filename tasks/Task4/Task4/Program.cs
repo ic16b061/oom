@@ -12,17 +12,12 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            // create different albums
-            var a_items = new List<Album>
+            // create different products
+            var items = new Product[]
             {
                 new Album("Sorceress", "Opeth", "Opeth - Sorceress", "0727361382209", 15.90m),
                 new Album("Love Ire & Song", "Frank Turner", "Frank Turner - Love Ire & Song", "5024545505122", 9.90m),
                 new Album("Back To Times Of Splendor", "Disillusion", "Disillusion - Back To Times Of Splendor", "0039841445619", 12.90m),
-            };
-
-            // create different headphones
-            var h_items = new List<Headphone>
-            {
                 new Headphone("AKG", "K702", "AKG K702", "9002761021219", 185.00m),
                 new Headphone("Beyerdynamic", "DT 880 Edition", "Beyerdynamic DT 880 Edition 600 Ohm", "4010118491320", 199.00m),
                 new Headphone("Sennheiser", "HD 800 S", "Sennheiser HD 800 S", "4044155209280", 1590.00m),
@@ -30,36 +25,23 @@ namespace Task4
                 new Headphone("Denon", "AH-D7200", "Denon AH-D7200", "4951035059357", 799.00m),
             };
 
-            // print each album description and current price and serialize it to json file
-            for (var i = 0; i < a_items.Count; i++)
+            // print description and price of each product
+            foreach (var x in items)
             {
-                Console.WriteLine($"{a_items[i].Description}: {a_items[i].Price}");
-                string s = JsonConvert.SerializeObject(a_items[i]);
-                File.WriteAllText(@"D:\" + a_items[i].Artist + "_" + a_items[i].Name + ".json", s);
+                Console.WriteLine("{0}: {1:0.00}", x.Description, x.Price);
             }
 
-            // print each headphone description and current price and serialize it to json file
-            for (var i = 0; i < h_items.Count; i++)
+            // Serialize products to json file
+            Console.WriteLine("Serialize products...");
+            string s = JsonConvert.SerializeObject(items);
+            File.WriteAllText(@"D:\products.json", s);
+            
+            // deserialize products from JSON file & print description and price of each product
+            Console.WriteLine("Deserialize products...");
+            dynamic items_new = JsonConvert.DeserializeObject(File.ReadAllText(@"D:\products.json"));
+            foreach (var x in items_new)
             {
-                Console.WriteLine($"{h_items[i].Description}: {h_items[i].Price}");
-                string s = JsonConvert.SerializeObject(h_items[i]);
-                File.WriteAllText(@"D:\" + h_items[i].Brand + "_" + h_items[i].Model + ".json", s);
-            }
-
-            Console.WriteLine("Deserializing...");
-
-            // deserialize album JSON from file & print it
-            for (var i = 0; i < a_items.Count; i++)
-            {
-                Album x = JsonConvert.DeserializeObject<Album>(File.ReadAllText(@"D:\" + a_items[i].Artist + "_" + a_items[i].Name + ".json"));
-                Console.WriteLine($"{x.Description}: {x.Price}");
-            }
-
-            // deserialize headphone JSON from file & print it
-            for (var i = 0; i < h_items.Count; i++)
-            {
-                Headphone x = JsonConvert.DeserializeObject<Headphone>(File.ReadAllText(@"D:\" + h_items[i].Brand + "_" + h_items[i].Model + ".json"));
-                Console.WriteLine($"{x.Description}: {x.Price}");
+                Console.WriteLine("{0}: {1:0.00}", x.Description, x.Price);
             }
         }
     }
