@@ -77,6 +77,7 @@ namespace Task6
 
             foreach (var x in items)
             {
+                token.ThrowIfCancellationRequested();
                 Task.Delay(TimeSpan.FromSeconds(3.0 + random.Next(10))).Wait();
                 if (await IsBelow1000(x.Price, token)) Console.WriteLine($"Price of {x.Description} is below 1.000 Euros: {x.Price:0.00}");
             }
